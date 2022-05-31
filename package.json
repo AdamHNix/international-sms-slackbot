@@ -1,0 +1,17 @@
+{
+  "name": "international-regulations-bot",
+  "version": "1.0.0",
+  "description": "scrapes Twilio's regulations page based on country user inputs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Nix",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "jsdom": "^19.0.0",
+    "node-fetch": "^3.2.4",
+    "puppeteer": "^14.1.2"
+  }
+}
