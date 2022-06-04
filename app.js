@@ -94,6 +94,7 @@ app.message( async ({ message, say }) => {
             thArrText.length = index + 1
         }
     })
+    console.log(regulatoryItems)
     await say(regulatoryItems['locale name']);
   });
 
