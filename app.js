@@ -95,7 +95,7 @@ app.message( async ({ message, say }) => {
         }
     })
     console.log(regulatoryItems)
-    await say(regulatoryItems['locale name']);
+    await say(regulatoryItems['Locale name'])
   });
 
 (async () => {
