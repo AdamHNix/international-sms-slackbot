@@ -4,7 +4,7 @@ import App from '@slack/bolt';
 // Initializes your app with your bot token and signing secret
 const app = new App.App({
   token: process.env.SLACK_BOT_TOKEN,
-  socketMode: true,
+  socketMode: false,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   appToken: process.env.SLACK_APP_TOKEN
 });
