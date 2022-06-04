@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import App from '@slack/bolt';
+import index from 'index.js'
 
 // Initializes your app with your bot token and signing secret
 const app = new App.App({
@@ -10,9 +11,9 @@ const app = new App.App({
 });
 
 // Listens to incoming messages that contain "hello"
-app.message('hello', async ({ message, say }) => {
+app.message( async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
-    await say(`Hey there <@${message.user}>!`);
+    await say(`Hey there <@${message.user}>! You said ${message}`);
   });
 
 (async () => {
