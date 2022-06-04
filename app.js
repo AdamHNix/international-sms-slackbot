@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import App from '@slack/bolt';
-import index from 'index.js'
+//import index from 'index.js'
 
 // Initializes your app with your bot token and signing secret
 const app = new App.App({
