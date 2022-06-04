@@ -36,6 +36,7 @@ app.message( async ({ message, say }) => {
     const regulatoryItems = {}
     //index counter for object array
     let i = 0
+    let alphaNetwork;
     //table values array initialized
     const tdArrText = []
     //table keys array initialized
@@ -95,7 +96,25 @@ app.message( async ({ message, say }) => {
         }
     })
     console.log(regulatoryItems)
-    await say(regulatoryItems['Locale name'])
+    if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'] === ('Supported'|| 'Required'))&& 
+    (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].includes("required"))){
+      alphaNetwork = 'Alphanumeric Preregistration required'
+    } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === 'Supported'
+     && (regulatoryItems['Alphanumeric Dynamic Twilio supported']) === 'Supported'){
+      alphaNetwork = 'Alphanumeric Available'
+    } else {
+      alphaNetwork = 'unavailable'
+    }
+    await say(`Phone number availability for ${regulatoryItems['Locale name']} \n
+    *bold*Alphanumeric*bold*\n
+    ${alphaNetwork}
+    *bold*Long Code *bold*\n
+    *bold*Short Code*bold*\n
+    *bold*Compliance Considerations*bold*\n
+    *bold*Compliance Considerations*bold*\n
+     ${regulatoryItems['Compliance considerations']}\n
+    
+    `)
   });
 
 (async () => {
