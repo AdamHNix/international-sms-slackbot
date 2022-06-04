@@ -5,7 +5,8 @@ import App from '@slack/bolt';
 const app = new App.App({
   token: process.env.SLACK_BOT_TOKEN,
   socketMode: true,
-  signingSecret: process.env.SLACK_SIGNING_SECRET
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  appToken: process.env.SLACK_APP_TOKEN
 });
 
 // Listens to incoming messages that contain "hello"
