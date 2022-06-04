@@ -13,7 +13,7 @@ const app = new App.App({
 // Listens to incoming messages that contain "hello"
 app.message( async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
-    await say(`Hey there <@${message.user}>! You said ${message}`);
+    await say(`Hey there <@${message.user}>! You said ${message.text}`);
   });
 
 (async () => {
