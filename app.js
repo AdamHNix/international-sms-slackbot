@@ -94,7 +94,7 @@ app.message( async ({ message, say }) => {
             thArrText.length = index + 1
         }
     })
-    await say(`<@${regulatoryItems}>`);
+    await say(`<@${regulatoryItems.['locale name']}>`);
   });
 
 (async () => {
