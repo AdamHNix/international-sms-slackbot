@@ -4,7 +4,8 @@
   "description": "scrapes Twilio's regulations page based on country user inputs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./app.js"
   },
   "author": "Adam Nix",
   "license": "ISC",
@@ -14,5 +15,8 @@
     "dotenv": "^16.0.1",
     "jsdom": "^19.0.0",
     "node-fetch": "^3.2.4"
+  },
+  "engines": {
+    "node": "v16.15.0"
   }
 }
