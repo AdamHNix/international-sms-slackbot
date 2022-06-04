@@ -96,11 +96,11 @@ app.message( async ({ message, say }) => {
         }
     })
     console.log(regulatoryItems)
-    if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'] === ('Supported'|| 'Required'))&& 
-    (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].includes("required"))){
+    if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].includes('Required'))&& 
+    (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].includes("Required"))){
       alphaNetwork = 'Alphanumeric Preregistration required'
-    } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === 'Supported'
-     && (regulatoryItems['Alphanumeric Dynamic Twilio supported']) === 'Supported'){
+    } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'].includes('Supported')
+     && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].includes('Supported'))){
       alphaNetwork = 'Alphanumeric Available'
     } else {
       alphaNetwork = 'unavailable'

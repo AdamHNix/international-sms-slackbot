@@ -14,7 +14,7 @@ async function RegulationGet(url) {
     }
 }
 //need to change this to user input once slack is connec ted 
-const country = 'vg'
+const country = 'my'
 const html = await RegulationGet(`https://www.twilio.com/guidelines/${country}/sms`)
 const dom = html.window.document
 //get array from specific table on twilio webpage
@@ -81,5 +81,17 @@ thArrText.forEach((element, index) => {
         thArrText.length = index + 1
     }
 })
+let alphaNetwork
+if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].includes('Required'))&& 
+(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].includes("Required"))){
+  alphaNetwork = 'Alphanumeric Preregistration required'
+} else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'].includes('Supported')
+ && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].includes('Supported'))){
+  alphaNetwork = 'Alphanumeric Available'
+} else {
+  alphaNetwork = 'unavailable'
+}
+
+console.log("alpha", alphaNetwork)
 
 
