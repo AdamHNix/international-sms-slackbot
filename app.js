@@ -106,12 +106,12 @@ app.message( async ({ message, say }) => {
       alphaNetwork = 'unavailable'
     }
     await say(`Phone number availability for ${regulatoryItems['Locale name']} \n
-    *bold*Alphanumeric*bold*\n
+    *Alphanumeric*\n
     ${alphaNetwork}
-    *bold*Long Code *bold*\n
-    *bold*Short Code*bold*\n
-    *bold*Compliance Considerations*bold*\n
-    *bold*Compliance Considerations*bold*\n
+    *Long Code *\n
+    *Short Code*\n
+    *Compliance Considerations*\n
+    *Compliance Considerations*\n
      ${regulatoryItems['Compliance considerations']}\n
     
     `)
