@@ -1,6 +1,12 @@
 
 //using jsdom to scrape Twilio's regulatory page
 import { JSDOM } from "jsdom"
+import {App} from '@slack/bolt'
+
+const app = new App({
+    token: process.env.SLACK_BOT_TOKEN,
+    signingSecret: process.env.SLACK_SIGNING_SECRET
+  });
 
 //function to get regulatory page
 async function RegulationGet(url) {
