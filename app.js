@@ -137,7 +137,7 @@ app.message( async ({ message, say }) => {
     ${alphaNetwork}\n
     *Long Code *\n
     ${longCode}\n
-    *International LongCode*\n
+    *International Long Code*\n
     ${longCodeInternational}\n
     *Short Code*\n
     ${shortCode}\n
