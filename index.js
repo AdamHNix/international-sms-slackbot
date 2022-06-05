@@ -14,7 +14,7 @@ async function RegulationGet(url) {
     }
 }
 //need to change this to user input once slack is connec ted 
-const country = 'st'
+const country = 'eg'
 const html = await RegulationGet(`https://www.twilio.com/guidelines/${country}/sms`)
 const dom = html.window.document
 //get array from specific table on twilio webpage
@@ -81,13 +81,21 @@ thArrText.forEach((element, index) => {
         thArrText.length = index + 1
     }
 })
+//initialize all fields that will be displayed in slack message
 let alphaNetwork
 let longCode
 let longCodeInternational
 let shortCode
+
+//categorize alphanumeric functionality
+//if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
+//trim included on all items due to html from web page sometimes having spaces before and after a given word
 if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 11){
     regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,20)
 }
+if(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].length > 11){
+      regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,20)
+  }
 if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
 (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
   alphaNetwork = 'Alphanumeric Preregistration required'
@@ -98,13 +106,15 @@ if((regulatoryItems['Alphanumeric Pre-registration Operator network capability']
   alphaNetwork = 'unavailable'
 }
 
-if((regulatoryItems['Long Code Domestic Operator network capability'].replace(/^\s+|\s+$/gm,'') === ('Supported') )&& 
+//categorize long code functionality
+if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
 (regulatoryItems['Long Code Domestic Twilio supported'].trim() === ("Supported"))){
   longCode = 'Supported'
 } else {
   longCode = 'Not Supported'
 }
 
+//categorize international long code functionality
 if((regulatoryItems['Long Code International Operator network capability'].trim() === ('Supported') )&& 
 (regulatoryItems['Long Code International Twilio supported'].trim() === ("Supported"))){
   longCodeInternational = 'Supported'
@@ -112,12 +122,14 @@ if((regulatoryItems['Long Code International Operator network capability'].trim(
   longCodeInternational = 'Not Supported'
 }
 
+//categorize short code functionality
 if((regulatoryItems['Short Code Operator network capability'].trim() === ('Supported') )&& 
 (regulatoryItems['Short Code Twilio supported'].trim() === ("Supported"))){
   shortCode = 'Supported'
 } else {
   shortCode = 'Not Supported'
 }
+
 
 console.log("alpha", alphaNetwork)
 console.log("Long Code", longCode)

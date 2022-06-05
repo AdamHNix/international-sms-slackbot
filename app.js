@@ -107,9 +107,14 @@ app.message( async ({ message, say }) => {
     //categorize alphanumeric functionality
     //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
     //trim included on all items due to html from web page sometimes having spaces before and after a given word
+    console.log("TEST1", regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,20))
+1
     if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 11){
-      console.log("TEST", regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,20))
         regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,20)
+    }
+    if(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].length > 9){
+      regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,20)
+
     }
     if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
     (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
