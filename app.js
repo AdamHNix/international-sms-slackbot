@@ -28,7 +28,8 @@ app.message( async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     //need to change this to user input once slack is connec ted 
     const country = message.text
-    const html = await RegulationGet(`https://www.twilio.com/guidelines/${country}/sms`)
+    const link = `https://www.twilio.com/guidelines/${country}/sms`
+    const html = await RegulationGet(link)
     const dom = html.window.document
     //get array from specific table on twilio webpage
     let tableArr = Array.from(dom.getElementsByClassName("guideline-box"))
@@ -142,8 +143,8 @@ app.message( async ({ message, say }) => {
     *Short Code*\n
     ${shortCode}\n
     *Compliance Considerations*\n
-     ${regulatoryItems['Compliance considerations']}\n
-    
+     ${regulatoryItems['Compliance considerations']}\n\n
+    <${link}|Learn More>
     `)
   });
 
