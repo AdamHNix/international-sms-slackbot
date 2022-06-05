@@ -1,8 +1,9 @@
+//for slack auth
 import 'dotenv/config'
+//slack API library
 import App from '@slack/bolt';
 //using jsdom to scrape Twilio's regulatory page
 import { JSDOM } from "jsdom"
-
 //function to get regulatory page
 async function RegulationGet(url) {
     try{
@@ -86,6 +87,7 @@ app.message( async ({ message, say }) => {
             }
         })
     })
+
     //objectArrayCount keeps track of the indexes in the array below. thArr logs a lot of keys from the regulatory page that we don't need. No need to log anything after index 46
     let objectArrayCount = 0
     thArrText.forEach((element, index) => {
@@ -95,10 +97,16 @@ app.message( async ({ message, say }) => {
             thArrText.length = index + 1
         }
     })
+
+    //initialize all fields that will be displayed in slack message
     let alphaNetwork
     let longCode
     let longCodeInternational
     let shortCode
+
+    //categorize alphanumeric functionality
+    //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
+    //trim included on all items due to html from web page sometimes having spaces before and after a given word
     if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 11){
         regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,20)
     }
@@ -111,21 +119,24 @@ app.message( async ({ message, say }) => {
     } else {
       alphaNetwork = 'unavailable'
     }
-    
-    if((regulatoryItems['Long Code Domestic Operator network capability'].replace(/^\s+|\s+$/gm,'') === ('Supported') )&& 
+
+    //categorize long code functionality
+    if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
     (regulatoryItems['Long Code Domestic Twilio supported'].trim() === ("Supported"))){
       longCode = 'Supported'
     } else {
       longCode = 'Not Supported'
     }
-    
+
+    //categorize international long code functionality
     if((regulatoryItems['Long Code International Operator network capability'].trim() === ('Supported') )&& 
     (regulatoryItems['Long Code International Twilio supported'].trim() === ("Supported"))){
       longCodeInternational = 'Supported'
     } else {
       longCodeInternational = 'Not Supported'
     }
-    
+
+    //categorize short code functionality
     if((regulatoryItems['Short Code Operator network capability'].trim() === ('Supported') )&& 
     (regulatoryItems['Short Code Twilio supported'].trim() === ("Supported"))){
       shortCode = 'Supported'
@@ -133,6 +144,7 @@ app.message( async ({ message, say }) => {
       shortCode = 'Not Supported'
     }
     
+    //post text to slack bolt
     await say(`Phone number availability for ${regulatoryItems['Locale name']} \n
     *Alphanumeric*\n
     ${alphaNetwork}\n
@@ -143,11 +155,11 @@ app.message( async ({ message, say }) => {
     *Short Code*\n
     ${shortCode}\n
     *Compliance Considerations*\n
-     ${regulatoryItems['Compliance considerations']}\n\n
-    <${link}|Learn More>
+     ${regulatoryItems['Compliance considerations']}\n
+    _<${link}|Learn More>_
     `)
   });
-
+//start slack app
 (async () => {
   // Start your app
   await app.start(process.env.PORT || 3000);
