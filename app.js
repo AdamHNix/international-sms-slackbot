@@ -17,7 +17,7 @@ async function RegulationGet(url) {
 }
 //convert country to cca2 code
 async function fetchCountry(request){
-  const countryInfo = await fetch(`https://restcountries.com/v3.1/name/${countryFull}`)
+  const countryInfo = await fetch(`https://restcountries.com/v3.1/name/${request}`)
   const countryJson = await countryInfo.json()
   console.log("json", countryJson)
   const countryISO = await countryJson[0].cca2
