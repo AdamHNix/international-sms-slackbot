@@ -51,7 +51,8 @@ app.message( async ({ message, say }) => {
       try{
         return countryISO = await fetchCountry(countryFull)
 
-      }catch{
+      }catch(e){
+        console.log('ERROR!!', e)
          say("country not found")
          return
       }
