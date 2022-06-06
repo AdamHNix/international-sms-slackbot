@@ -59,12 +59,13 @@ app.message( async ({ message, say }) => {
       return
     }
     const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
+    let html
     try{
-      const html = await RegulationGet(link)
+      html = await RegulationGet(link)
     }catch(e){
       console.log("error on jsdom fetch", e)
       say("country not found")
-      const html = "country not found"
+      html = "country not found"
       return
     }
     if(html === "country not found"){
