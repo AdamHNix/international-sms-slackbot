@@ -25,8 +25,6 @@ async function fetchCountry(request){
   const countryJson = await countryInfo.json()
   console.log("json", countryJson)
   const countryISORes = await countryJson[0].cca2
-  const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
-  //const html = await RegulationGet(link)
   return countryISORes
 }
 
