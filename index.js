@@ -14,8 +14,9 @@ async function RegulationGet(url) {
     }
 }
 //need to change this to user input once slack is connec ted 
-const country = 'ca'
+const country = 'vf'
 const html = await RegulationGet(`https://www.twilio.com/guidelines/${country}/sms`)
+console.log(html)
 const dom = html.window.document
 //get array from specific table on twilio webpage
 let tableArr = Array.from(dom.getElementsByClassName("guideline-box"))

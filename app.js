@@ -59,14 +59,20 @@ app.message( async ({ message, say }) => {
       return
     }
     const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
-    const html = await RegulationGet(link)
+    try{
+      const html = await RegulationGet(link)
+    }catch(e){
+      console.log("error on jsdom fetch", e)
+      say("country not found")
+      const html = "country not found"
+      return
+    }
+    if(html === "country not found"){
+      return
+    }
     const dom = html.window.document
     //get array from specific table on twilio webpage
     let tableArr = Array.from(dom.getElementsByClassName("guideline-box"))
-    if(tableArr === []){
-      say("Country not found")
-      return
-    }
     //initialize object array to hold final result
     const regulatoryItems = {}
     //index counter for object array
