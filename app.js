@@ -4,7 +4,11 @@ import 'dotenv/config'
 import App from '@slack/bolt';
 //using jsdom to scrape Twilio's regulatory page
 import { JSDOM } from "jsdom"
+//using fetch for restcountries api
+import fetch from 'node-fetch';
+
 //function to get regulatory page
+
 async function RegulationGet(url) {
     try{
         return JSDOM.fromURL(url).then(dom => {
