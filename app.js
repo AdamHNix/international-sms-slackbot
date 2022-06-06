@@ -24,7 +24,7 @@ async function fetchCountry(request){
   const countryInfo = await fetch(`https://restcountries.com/v3.1/name/${request}`)
   const countryJson = await countryInfo.json()
   console.log("json", countryJson)
-  const countryISORes = await countryJson[0].cca2
+  const countryISORes = countryJson[0].cca2
   return countryISORes
 }
 
