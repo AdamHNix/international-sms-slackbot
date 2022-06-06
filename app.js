@@ -44,7 +44,7 @@ app.message( async ({ message, say }) => {
     //need to change this to user input once slack is connec ted 
     const countryFull = message.text
     let countryISO = ''
-    if (countryName.length === 2){
+    if (countryFull.length === 2){
       countryISO = countryFull
     } else{
       //convert to ISO
