@@ -49,7 +49,8 @@ app.message( async ({ message, say }) => {
     } else{
       //convert to ISO
       try{
-        return countryISO = await fetchCountry(countryFull)
+        countryISO = await fetchCountry(countryFull)
+        return
 
       }catch(e){
         console.log('ERROR!!', e)
