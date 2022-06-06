@@ -24,10 +24,10 @@ async function fetchCountry(request){
   const countryInfo = await fetch(`https://restcountries.com/v3.1/name/${request}`)
   const countryJson = await countryInfo.json()
   console.log("json", countryJson)
-  const countryISO = await countryJson[0].cca2
+  const countryISORes = await countryJson[0].cca2
   const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
   //const html = await RegulationGet(link)
-  return countryISO
+  return countryISORes
 }
 
 // Initializes your app with your bot token and signing secret
@@ -43,8 +43,21 @@ app.message( async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     //need to change this to user input once slack is connec ted 
     const countryFull = message.text
-    //convert to ISO
-    const countryISO = await fetchCountry(countryFull)
+    let countryISO = ''
+    if (countryName.length === 2){
+      countryISO = countryFull
+    } else{
+      //convert to ISO
+      try{
+        return countryISO = await fetchCountry(countryFull)
+
+      }catch{
+        say("country not found")
+      }
+    }
+    if (countryISO === "COUNTRY NOT FOUND"){
+
+    }
     const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
     const html = await RegulationGet(link)
     const dom = html.window.document
