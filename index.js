@@ -14,7 +14,7 @@ async function RegulationGet(url) {
     }
 }
 //need to change this to user input once slack is connec ted 
-const country = 'eg'
+const country = 'ca'
 const html = await RegulationGet(`https://www.twilio.com/guidelines/${country}/sms`)
 const dom = html.window.document
 //get array from specific table on twilio webpage
@@ -37,7 +37,7 @@ tableArr.forEach(item =>{
         tdArrText.push(td.textContent)
     })
     thArr.forEach(th =>{        
-        if(th.textContent === '' || th.textContent === "Alphanumeric"|| th.textContent === "Long Code"|| th.textContent === "Short Code"|| th.textContent === "Pre-registration"|| th.textContent === "Dynamic"|| th.textContent === "Domestic"|| th.textContent === "International"){
+        if(th.textContent === '' || th.textContent === "Alphanumeric"|| th.textContent === "Long Code"|| th.textContent === "Short Code"|| th.textContent === "Toll Free" || th.textContent === "Pre-registration"|| th.textContent === "Dynamic"|| th.textContent === "Domestic"|| th.textContent === "International"){
             i++
         }
         //rename keys where there are duplicates in the guidelines table.
@@ -60,9 +60,11 @@ tableArr.forEach(item =>{
                 case 4:
                     thArrText.push("Short Code " + th.textContent)
                     break
+                case 5:
+                    thArrText.push("Toll Free " + th.textContent)
             }
                 y ++
-            }while(y< 5)
+            }while(y< 6)
 
         } 
         //write all regular key value pairs
@@ -77,15 +79,17 @@ let objectArrayCount = 0
 thArrText.forEach((element, index) => {
     regulatoryItems[(element)] = (tdArrText[index]);
     objectArrayCount++
-    if(objectArrayCount === 46){
+    if(objectArrayCount === 52){
         thArrText.length = index + 1
     }
 })
 //initialize all fields that will be displayed in slack message
+console.log("regulatory items!!", regulatoryItems)
 let alphaNetwork
 let longCode
 let longCodeInternational
 let shortCode
+let tollFree
 
 //categorize alphanumeric functionality
 //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
@@ -105,7 +109,6 @@ if((regulatoryItems['Alphanumeric Pre-registration Operator network capability']
 } else {
   alphaNetwork = 'unavailable'
 }
-
 //categorize long code functionality
 if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
 (regulatoryItems['Long Code Domestic Twilio supported'].trim() === ("Supported"))){
@@ -129,12 +132,19 @@ if((regulatoryItems['Short Code Operator network capability'].trim() === ('Suppo
 } else {
   shortCode = 'Not Supported'
 }
-
+//categorize Toll Free functionality
+if((regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
+(regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
+  tollFree = 'Supported'
+} else {
+  tollFree = 'Not Supported'
+}
 
 console.log("alpha", alphaNetwork)
 console.log("Long Code", longCode)
 console.log("Long Code International", longCodeInternational)
 console.log("Short Code", shortCode)
+console.log("Toll Free", tollFree)
 
 
 
