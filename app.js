@@ -52,11 +52,12 @@ app.message( async ({ message, say }) => {
         return countryISO = await fetchCountry(countryFull)
 
       }catch{
-        say("country not found")
+         say("country not found")
+         return
       }
     }
-    if (countryISO === "COUNTRY NOT FOUND"){
-
+    if (countryISO === "country not found"){
+      return
     }
     const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
     const html = await RegulationGet(link)
