@@ -14,7 +14,7 @@
     "@slack/bolt": "^3.11.1",
     "dotenv": "^16.0.1",
     "jsdom": "^19.0.0",
-    "node-fetch": "^3.2.4"
+    "node-fetch": "^3.2.5"
   },
   "engines": {
     "node": "v16.15.0"

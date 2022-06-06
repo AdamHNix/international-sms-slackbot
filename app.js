@@ -15,6 +15,16 @@ async function RegulationGet(url) {
         console.log("ERROR", e)
     }
 }
+//convert country to cca2 code
+async function fetchCountry(request){
+  const countryInfo = await fetch(`https://restcountries.com/v3.1/name/${countryFull}`)
+  const countryJson = await countryInfo.json()
+  console.log("json", countryJson)
+  const countryISO = await countryJson[0].cca2
+  const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
+  //const html = await RegulationGet(link)
+  return countryISO
+}
 
 // Initializes your app with your bot token and signing secret
 const app = new App.App({
@@ -28,8 +38,10 @@ const app = new App.App({
 app.message( async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     //need to change this to user input once slack is connec ted 
-    const country = message.text
-    const link = `https://www.twilio.com/guidelines/${country}/sms`
+    const countryFull = message.text
+    //convert to ISO
+    const countryISO = await fetchCountry(countryFull)
+    const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
     const html = await RegulationGet(link)
     const dom = html.window.document
     //get array from specific table on twilio webpage
@@ -118,12 +130,12 @@ app.message( async ({ message, say }) => {
     }
     if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
     (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
-      alphaNetwork = 'Alphanumeric Preregistration required'
+      alphaNetwork = 'Preregistration required'
     } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported')
      && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim() === ('Supported'))){
-      alphaNetwork = 'Alphanumeric Available'
+      alphaNetwork = 'Available'
     } else {
-      alphaNetwork = 'unavailable'
+      alphaNetwork = 'Unavailable'
     }
 
     //categorize long code functionality
