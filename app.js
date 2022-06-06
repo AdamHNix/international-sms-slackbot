@@ -16,33 +16,48 @@ async function RegulationGet(url) {
     });
 
     }catch(e){
-        console.log("ERROR", e)
+      console.log("ERROR", e)
     }
-}
-//convert country to cca2 code
-async function fetchCountry(request){
-  const countryInfo = await fetch(`https://restcountries.com/v3.1/name/${request}`)
-  const countryJson = await countryInfo.json()
-  console.log("json", countryJson)
-  const countryISORes = countryJson[0].cca2
-  console.log("made it", countryJson[0].cca2)
-  return countryISORes
-}
-
-// Initializes your app with your bot token and signing secret
-const app = new App.App({
-  token: process.env.SLACK_BOT_TOKEN,
-  socketMode: false,
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
-  appToken: process.env.SLACK_APP_TOKEN
-});
-
-// Listens to incoming messages that contain "hello"
-app.message( async ({ message, say }) => {
+  }
+  //convert country to cca2 code
+  async function fetchCountry(request){
+    const countryInfo = await fetch(`https://restcountries.com/v3.1/name/${request}`)
+    const countryJson = await countryInfo.json()
+    console.log("json", countryJson)
+    const countryISORes = countryJson[0].cca2
+    console.log("made it", countryJson[0].cca2)
+    return countryISORes
+  }
+  
+  // Initializes your app with your bot token and signing secret
+  const app = new App.App({
+    token: process.env.SLACK_BOT_TOKEN,
+    socketMode: false,
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    appToken: process.env.SLACK_APP_TOKEN
+  });
+  
+  // Listens to incoming messages that contain "hello"
+  app.message( async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     //need to change this to user input once slack is connec ted 
     const countryFull = message.text
     let countryISO = ''
+    //initialize all fields that will be displayed in slack message
+    let html
+    let alphaNetwork
+    let longCode
+    let longCodeInternational
+    let shortCode
+    let tollFree
+    //initialize object array to hold final result
+    const regulatoryItems = {}
+    //index counter for object array
+    let i = 0
+    //table values array initialized
+    const tdArrText = []
+    //table keys array initialized
+    const thArrText = []
     if (countryFull.length === 2){
       countryISO = countryFull
     } else{
@@ -50,19 +65,22 @@ app.message( async ({ message, say }) => {
       try{
         countryISO = await fetchCountry(countryFull)
       }catch(e){
+        //catch error if country doesnt exist
         console.log('ERROR!!', e)
          say("country not found")
          return
       }
     }
     if (countryISO === "country not found"){
+      //end action
       return
     }
+    //plug ISO into twilio regulatory link
     const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
-    let html
     try{
       html = await RegulationGet(link)
     }catch(e){
+      //catch 404 pages
       console.log("error on jsdom fetch", e)
       say("country not found")
       html = "country not found"
@@ -74,14 +92,6 @@ app.message( async ({ message, say }) => {
     const dom = html.window.document
     //get array from specific table on twilio webpage
     let tableArr = Array.from(dom.getElementsByClassName("guideline-box"))
-    //initialize object array to hold final result
-    const regulatoryItems = {}
-    //index counter for object array
-    let i = 0
-    //table values array initialized
-    const tdArrText = []
-    //table keys array initialized
-    const thArrText = []
     //set html object values from webpage scrape to td and th arrays.
     tableArr.forEach(item =>{
         let thtd = new JSDOM(item.outerHTML)
@@ -139,25 +149,14 @@ app.message( async ({ message, say }) => {
             thArrText.length = index + 1
         }
     })
-
-    //initialize all fields that will be displayed in slack message
-    let alphaNetwork
-    let longCode
-    let longCodeInternational
-    let shortCode
-    let tollFree
-
     //categorize alphanumeric functionality
     //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
     //trim included on all items due to html from web page sometimes having spaces before and after a given word
-    console.log("TEST1", regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,20))
-1
     if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 11){
         regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,20)
     }
     if(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].length > 9){
       regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,20)
-
     }
     if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
     (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
@@ -168,7 +167,6 @@ app.message( async ({ message, say }) => {
     } else {
       alphaNetwork = 'Unavailable'
     }
-
     //categorize long code functionality
     if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
     (regulatoryItems['Long Code Domestic Twilio supported'].trim() === ("Supported"))){
@@ -176,7 +174,6 @@ app.message( async ({ message, say }) => {
     } else {
       longCode = 'Not Supported'
     }
-
     //categorize international long code functionality
     if((regulatoryItems['Long Code International Operator network capability'].trim() === ('Supported') )&& 
     (regulatoryItems['Long Code International Twilio supported'].trim() === ("Supported"))){
@@ -184,7 +181,6 @@ app.message( async ({ message, say }) => {
     } else {
       longCodeInternational = 'Not Supported'
     }
-
     //categorize short code functionality
     if((regulatoryItems['Short Code Operator network capability'].trim() === ('Supported') )&& 
     (regulatoryItems['Short Code Twilio supported'].trim() === ("Supported"))){
@@ -192,7 +188,6 @@ app.message( async ({ message, say }) => {
     } else {
       shortCode = 'Not Supported'
     }
-
     //categorize toll free functionality
     if((regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
     (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
@@ -200,7 +195,6 @@ app.message( async ({ message, say }) => {
     } else {
     tollFree = 'Not Supported'
     }
-    
     //post text to slack bolt
     await say(`Phone number availability for ${regulatoryItems['Locale name']} \n
     *Alphanumeric*\n
