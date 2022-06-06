@@ -63,6 +63,10 @@ app.message( async ({ message, say }) => {
     const dom = html.window.document
     //get array from specific table on twilio webpage
     let tableArr = Array.from(dom.getElementsByClassName("guideline-box"))
+    if(tableArr === []){
+      say("Country not found")
+      return
+    }
     //initialize object array to hold final result
     const regulatoryItems = {}
     //index counter for object array
