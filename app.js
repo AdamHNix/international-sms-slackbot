@@ -68,7 +68,7 @@ app.message( async ({ message, say }) => {
             tdArrText.push(td.textContent)
         })
         thArr.forEach(th =>{        
-            if(th.textContent === '' || th.textContent === "Alphanumeric"|| th.textContent === "Long Code"|| th.textContent === "Short Code"|| th.textContent === "Pre-registration"|| th.textContent === "Dynamic"|| th.textContent === "Domestic"|| th.textContent === "International"){
+            if(th.textContent === '' || th.textContent === "Alphanumeric"|| th.textContent === "Long Code"|| th.textContent === "Short Code"|| th.textContent === "Toll Free"|| th.textContent === "Pre-registration"|| th.textContent === "Dynamic"|| th.textContent === "Domestic"|| th.textContent === "International"){
                 i++
             }
             //rename keys where there are duplicates in the guidelines table.
@@ -91,8 +91,8 @@ app.message( async ({ message, say }) => {
                     case 4:
                         thArrText.push("Short Code " + th.textContent)
                         break
-                        case 5:
-                          thArrText.push("Toll Free " + th.textContent)
+                    case 5:
+                      thArrText.push("Toll Free " + th.textContent)
                   }
                       y ++
                   }while(y< 6)
@@ -187,6 +187,8 @@ app.message( async ({ message, say }) => {
     ${longCodeInternational}\n
     *Short Code*\n
     ${shortCode}\n
+    *Toll Free*\n
+    ${tollFree}\n
     *Compliance Considerations*\n
      ${regulatoryItems['Compliance considerations']}\n
     _<${link}|Learn More>_
