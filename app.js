@@ -40,7 +40,6 @@ async function RegulationGet(url) {
   // Listens to incoming messages that contain "hello"
   app.message( async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
-    //need to change this to user input once slack is connec ted 
     const countryFull = message.text
     let countryISO = ''
     //initialize all fields that will be displayed in slack message
@@ -58,6 +57,10 @@ async function RegulationGet(url) {
     const tdArrText = []
     //table keys array initialized
     const thArrText = []
+    //objectArrayCount keeps track of the indexes in the array below. thArr logs a lot of keys from the regulatory page that we don't need. No need to log anything after index 46
+    let objectArrayCount = 0
+
+
     if (countryFull.length === 2){
       countryISO = countryFull
     } else{
@@ -139,9 +142,6 @@ async function RegulationGet(url) {
             }
         })
     })
-
-    //objectArrayCount keeps track of the indexes in the array below. thArr logs a lot of keys from the regulatory page that we don't need. No need to log anything after index 46
-    let objectArrayCount = 0
     thArrText.forEach((element, index) => {
         regulatoryItems[(element)] = (tdArrText[index]);
         objectArrayCount++
@@ -159,38 +159,38 @@ async function RegulationGet(url) {
       regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,20)
     }
     if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
-    (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
+    (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim(/['"]+/g, '') === ("Required"))){
       alphaNetwork = 'Preregistration required'
     } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported')
-     && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim() === ('Supported'))){
+     && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim(/['"]+/g, '') === ('Supported'))){
       alphaNetwork = 'Available'
     } else {
       alphaNetwork = 'Unavailable'
     }
     //categorize long code functionality
-    if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
-    (regulatoryItems['Long Code Domestic Twilio supported'].trim() === ("Supported"))){
+    if((regulatoryItems['Long Code Domestic Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
+    (regulatoryItems['Long Code Domestic Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
       longCode = 'Supported'
     } else {
       longCode = 'Not Supported'
     }
     //categorize international long code functionality
-    if((regulatoryItems['Long Code International Operator network capability'].trim() === ('Supported') )&& 
-    (regulatoryItems['Long Code International Twilio supported'].trim() === ("Supported"))){
+    if((regulatoryItems['Long Code International Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
+    (regulatoryItems['Long Code International Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
       longCodeInternational = 'Supported'
     } else {
       longCodeInternational = 'Not Supported'
     }
     //categorize short code functionality
-    if((regulatoryItems['Short Code Operator network capability'].trim() === ('Supported') )&& 
-    (regulatoryItems['Short Code Twilio supported'].trim() === ("Supported"))){
+    if((regulatoryItems['Short Code Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
+    (regulatoryItems['Short Code Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
       shortCode = 'Supported'
     } else {
       shortCode = 'Not Supported'
     }
     //categorize toll free functionality
-    if((regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
-    (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
+    if((regulatoryItems['Toll Free Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
+    (regulatoryItems['Toll Free Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
     tollFree = 'Supported'
     } else {
     tollFree = 'Not Supported'
@@ -214,7 +214,6 @@ async function RegulationGet(url) {
   });
 //start slack app
 (async () => {
-  // Start your app
   await app.start(process.env.PORT || 3000);
 
   console.log('⚡️ Bolt app is running!');
