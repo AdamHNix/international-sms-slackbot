@@ -25,6 +25,7 @@ async function fetchCountry(request){
   const countryJson = await countryInfo.json()
   console.log("json", countryJson)
   const countryISORes = countryJson[0].cca2
+  console.log("made it", countryJson[0].cca2)
   return countryISORes
 }
 
@@ -48,8 +49,6 @@ app.message( async ({ message, say }) => {
       //convert to ISO
       try{
         countryISO = await fetchCountry(countryFull)
-        return
-
       }catch(e){
         console.log('ERROR!!', e)
          say("country not found")
