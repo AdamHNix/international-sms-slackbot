@@ -91,9 +91,11 @@ app.message( async ({ message, say }) => {
                     case 4:
                         thArrText.push("Short Code " + th.textContent)
                         break
-                }
-                    y ++
-                }while(y< 5)
+                        case 5:
+                          thArrText.push("Toll Free " + th.textContent)
+                  }
+                      y ++
+                  }while(y< 6)
 
             } 
             //write all regular key value pairs
@@ -109,7 +111,7 @@ app.message( async ({ message, say }) => {
     thArrText.forEach((element, index) => {
         regulatoryItems[(element)] = (tdArrText[index]);
         objectArrayCount++
-        if(objectArrayCount === 46){
+        if(objectArrayCount === 52){
             thArrText.length = index + 1
         }
     })
@@ -119,6 +121,7 @@ app.message( async ({ message, say }) => {
     let longCode
     let longCodeInternational
     let shortCode
+    let tollFree
 
     //categorize alphanumeric functionality
     //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
@@ -164,6 +167,14 @@ app.message( async ({ message, say }) => {
       shortCode = 'Supported'
     } else {
       shortCode = 'Not Supported'
+    }
+
+    //categorize toll free functionality
+    if((regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
+    (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
+    tollFree = 'Supported'
+    } else {
+    tollFree = 'Not Supported'
     }
     
     //post text to slack bolt
