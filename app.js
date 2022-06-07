@@ -202,12 +202,13 @@ async function RegulationGet(url) {
       shortCode = 'Not Supported'
   }
   //categorize toll free functionality
-  if(case5 = true && (regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
-  (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
-  tollFree = 'Supported'
-  } else {
-  tollFree = 'Not Supported'
-  
+  if(case5 == true){
+    if ((regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
+    (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
+      tollFree = 'Supported'
+    } else {
+      tollFree = 'Not Supported'   
+    }
   }
     //post text to slack bolt
     await say(`Phone number availability for ${regulatoryItems['Locale name']} \n
