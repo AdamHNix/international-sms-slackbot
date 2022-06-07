@@ -132,19 +132,19 @@ async function RegulationGet(url) {
     })
 
     console.log("reg items!", regulatoryItems)
-    console.log("reg item alpha", regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim(/['"]+/g, ''))
     //categorize alphanumeric functionality
     //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
     //trim included on all items due to html from web page sometimes having spaces before and after a given word
     if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 11){
         console.log("check")
-        regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,20)
+        regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(2,20)
+        console.log("before second slic dynamic", regulatoryItems['Alphanumeric Dynamic Twilio supported'])
+
     }
     
     if(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].length > 9){
-        regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,20)
+        regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,21)
         console.log("before second slice", regulatoryItems['Alphanumeric Pre-registration Twilio supported'])
-        console.log("reg item alpha 2", (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim(/['"]+/g, '')).slice(0, 9))
     }
     if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
     (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim(/['"]+/g, '') === ("Required"))){

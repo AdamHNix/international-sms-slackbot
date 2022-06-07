@@ -49,6 +49,7 @@ async function RegulationGet(url) {
     let longCodeInternational
     let shortCode
     let tollFree
+    let case5 = false
     //initialize object array to hold final result
     const regulatoryItems = {}
     //index counter for object array
@@ -106,6 +107,9 @@ async function RegulationGet(url) {
         })
         thArr.forEach(th =>{        
             if(th.textContent === '' || th.textContent === "Alphanumeric"|| th.textContent === "Long Code"|| th.textContent === "Short Code"|| th.textContent === "Toll Free"|| th.textContent === "Pre-registration"|| th.textContent === "Dynamic"|| th.textContent === "Domestic"|| th.textContent === "International"){
+              if (th.textContent === "Toll Free"){
+                let case5 = true
+              }
                 i++
             }
             //rename keys where there are duplicates in the guidelines table.
@@ -129,7 +133,11 @@ async function RegulationGet(url) {
                         thArrText.push("Short Code " + th.textContent)
                         break
                     case 5:
-                      thArrText.push("Toll Free " + th.textContent)
+                      if(case5){
+                        thArrText.push("Toll Free " + th.textContent)
+                      }
+                      break
+                      //todo THIS IS THE ISSUE. Adding toll free an an extra case caused problems
                   }
                       y ++
                   }while(y< 6)
@@ -152,45 +160,45 @@ async function RegulationGet(url) {
     //categorize alphanumeric functionality
     //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
     //trim included on all items due to html from web page sometimes having spaces before and after a given word
-    if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 9){
-        regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,20)
+    if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 11){
+        regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,21)
     }
     if(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].length > 9){
-      regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,20)
+      regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,21)
     }
     if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
-    (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim(/['"]+/g, '') === ("Required"))){
+    (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
       alphaNetwork = 'Preregistration required'
     } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported')
-     && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim(/['"]+/g, '') === ('Supported'))){
+     && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim() === ('Supported'))){
       alphaNetwork = 'Available'
     } else {
       alphaNetwork = 'Unavailable'
     }
     //categorize long code functionality
-    if((regulatoryItems['Long Code Domestic Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
-    (regulatoryItems['Long Code Domestic Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
+    if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
+    (regulatoryItems['Long Code Domestic Twilio supported'].trim() === ("Supported"))){
       longCode = 'Supported'
     } else {
       longCode = 'Not Supported'
     }
     //categorize international long code functionality
-    if((regulatoryItems['Long Code International Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
-    (regulatoryItems['Long Code International Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
+    if((regulatoryItems['Long Code International Operator network capability'].trim() === ('Supported') )&& 
+    (regulatoryItems['Long Code International Twilio supported'].trim() === ("Supported"))){
       longCodeInternational = 'Supported'
     } else {
       longCodeInternational = 'Not Supported'
     }
     //categorize short code functionality
-    if((regulatoryItems['Short Code Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
-    (regulatoryItems['Short Code Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
+    if((regulatoryItems['Short Code Operator network capability'].trim() === ('Supported') )&& 
+    (regulatoryItems['Short Code Twilio supported'].trim() === ("Supported"))){
       shortCode = 'Supported'
     } else {
       shortCode = 'Not Supported'
     }
     //categorize toll free functionality
-    if((regulatoryItems['Toll Free Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
-    (regulatoryItems['Toll Free Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
+    if((regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
+    (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
     tollFree = 'Supported'
     } else {
     tollFree = 'Not Supported'
