@@ -197,7 +197,7 @@ async function RegulationGet(url) {
       shortCode = 'Not Supported'
     }
     //categorize toll free functionality
-    if((regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
+    if(case5 = true && (regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
     (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
     tollFree = 'Supported'
     } else {
