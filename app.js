@@ -108,7 +108,7 @@ async function RegulationGet(url) {
         thArr.forEach(th =>{        
             if(th.textContent === '' || th.textContent === "Alphanumeric"|| th.textContent === "Long Code"|| th.textContent === "Short Code"|| th.textContent === "Toll Free"|| th.textContent === "Pre-registration"|| th.textContent === "Dynamic"|| th.textContent === "Domestic"|| th.textContent === "International"){
               if (th.textContent === "Toll Free"){
-                let case5 = true
+                case5 = true
               }
                 i++
             }
@@ -151,12 +151,16 @@ async function RegulationGet(url) {
         })
     })
     thArrText.forEach((element, index) => {
-        regulatoryItems[(element)] = (tdArrText[index]);
-        objectArrayCount++
-        if(objectArrayCount === 52){
-            thArrText.length = index + 1
-        }
-    })
+      regulatoryItems[(element)] = (tdArrText[index]);
+      objectArrayCount++
+      if(case5 == false){
+          if(objectArrayCount === 46){
+              thArrText.length = index + 1
+          }
+      } else if (objectArrayCount === 52){
+          thArrText.length = index + 1
+      }
+  })
     //categorize alphanumeric functionality
     //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
     //trim included on all items due to html from web page sometimes having spaces before and after a given word
@@ -171,6 +175,7 @@ async function RegulationGet(url) {
       alphaNetwork = 'Preregistration required'
     } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported')
      && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim() === ('Supported'))){
+       //todo I tihnk the issue might be here
       alphaNetwork = 'Available'
     } else {
       alphaNetwork = 'Unavailable'

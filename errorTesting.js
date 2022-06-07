@@ -1,9 +1,13 @@
-
+//for slack auth
+import 'dotenv/config'
+//slack API library
+import App from '@slack/bolt';
 //using jsdom to scrape Twilio's regulatory page
 import { JSDOM } from "jsdom"
 //using fetch for restcountries api
 import fetch from 'node-fetch';
 
+//function to get regulatory page
 
 async function RegulationGet(url) {
     try{
@@ -24,8 +28,8 @@ async function RegulationGet(url) {
     console.log("made it", countryJson[0].cca2)
     return countryISORes
   }
-
-    const countryFull = 'Albania'
+  
+    const countryFull = "Afghanistan"
     let countryISO = ''
     //initialize all fields that will be displayed in slack message
     let html
@@ -34,6 +38,7 @@ async function RegulationGet(url) {
     let longCodeInternational
     let shortCode
     let tollFree
+    let case5 = false
     //initialize object array to hold final result
     const regulatoryItems = {}
     //index counter for object array
@@ -54,12 +59,8 @@ async function RegulationGet(url) {
         countryISO = await fetchCountry(countryFull)
       }catch(e){
         //catch error if country doesnt exist
-        console.log('ERROR!!', e)
-         //say("country not found")
+        console.log('ERROR!!', e)         
       }
-    }
-    if (countryISO === "country not found"){
-      //end action
     }
     //plug ISO into twilio regulatory link
     const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
@@ -68,11 +69,8 @@ async function RegulationGet(url) {
     }catch(e){
       //catch 404 pages
       console.log("error on jsdom fetch", e)
-      //say("country not found")
-      html = "country not found"
     }
-    if(html === "country not found"){
-    }
+
     const dom = html.window.document
     //get array from specific table on twilio webpage
     let tableArr = Array.from(dom.getElementsByClassName("guideline-box"))
@@ -87,6 +85,9 @@ async function RegulationGet(url) {
         })
         thArr.forEach(th =>{        
             if(th.textContent === '' || th.textContent === "Alphanumeric"|| th.textContent === "Long Code"|| th.textContent === "Short Code"|| th.textContent === "Toll Free"|| th.textContent === "Pre-registration"|| th.textContent === "Dynamic"|| th.textContent === "Domestic"|| th.textContent === "International"){
+              if (th.textContent === "Toll Free"){
+                case5 = true
+              }
                 i++
             }
             //rename keys where there are duplicates in the guidelines table.
@@ -110,7 +111,11 @@ async function RegulationGet(url) {
                         thArrText.push("Short Code " + th.textContent)
                         break
                     case 5:
-                      thArrText.push("Toll Free " + th.textContent)
+                      if(case5){
+                          console.log("toll free")
+                        thArrText.push("Toll Free " + th.textContent)
+                      }
+                      break
                   }
                       y ++
                   }while(y< 6)
@@ -122,64 +127,82 @@ async function RegulationGet(url) {
                 i++
             }
         })
+        console.log("th text", thArrText)
+        console.log("td text", tdArrText)
     })
     thArrText.forEach((element, index) => {
         regulatoryItems[(element)] = (tdArrText[index]);
         objectArrayCount++
-        if(objectArrayCount === 52){
+        if(case5 == false){
+            if(objectArrayCount === 46){
+                thArrText.length = index + 1
+            }
+        } else if (objectArrayCount === 52){
             thArrText.length = index + 1
         }
     })
-
-    console.log("reg items!", regulatoryItems)
     //categorize alphanumeric functionality
     //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
     //trim included on all items due to html from web page sometimes having spaces before and after a given word
     if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 11){
-        console.log("check")
-        regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(2,20)
-        console.log("before second slic dynamic", regulatoryItems['Alphanumeric Dynamic Twilio supported'])
-
+        regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,21)
     }
-    
     if(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].length > 9){
         regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,21)
-        console.log("before second slice", regulatoryItems['Alphanumeric Pre-registration Twilio supported'])
     }
     if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
-    (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim(/['"]+/g, '') === ("Required"))){
-      alphaNetwork = 'Preregistration required'
+    (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
+        alphaNetwork = 'Preregistration required'
     } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported')
-     && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim(/['"]+/g, '') === ('Supported'))){
-      alphaNetwork = 'Available'
+    && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim() === ('Supported'))){
+        //todo I tihnk the issue might be here
+        alphaNetwork = 'Available'
     } else {
-      alphaNetwork = 'Unavailable'
+        alphaNetwork = 'Unavailable'
     }
     //categorize long code functionality
-    if((regulatoryItems['Long Code Domestic Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
-    (regulatoryItems['Long Code Domestic Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
-      longCode = 'Supported'
+    if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
+    (regulatoryItems['Long Code Domestic Twilio supported'].trim() === ("Supported"))){
+        longCode = 'Supported'
     } else {
-      longCode = 'Not Supported'
+        longCode = 'Not Supported'
     }
     //categorize international long code functionality
-    if((regulatoryItems['Long Code International Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
-    (regulatoryItems['Long Code International Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
-      longCodeInternational = 'Supported'
+    if((regulatoryItems['Long Code International Operator network capability'].trim() === ('Supported') )&& 
+    (regulatoryItems['Long Code International Twilio supported'].trim() === ("Supported"))){
+        longCodeInternational = 'Supported'
     } else {
-      longCodeInternational = 'Not Supported'
+        longCodeInternational = 'Not Supported'
     }
     //categorize short code functionality
-    if((regulatoryItems['Short Code Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
-    (regulatoryItems['Short Code Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
-      shortCode = 'Supported'
+    if((regulatoryItems['Short Code Operator network capability'].trim() === ('Supported') )&& 
+    (regulatoryItems['Short Code Twilio supported'].trim() === ("Supported"))){
+        shortCode = 'Supported'
     } else {
-      shortCode = 'Not Supported'
+        shortCode = 'Not Supported'
     }
     //categorize toll free functionality
-    if((regulatoryItems['Toll Free Operator network capability'].trim(/['"]+/g, '') === ('Supported') )&& 
-    (regulatoryItems['Toll Free Twilio supported'].trim(/['"]+/g, '') === ("Supported"))){
+    if(case5 = true && (regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
+    (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
     tollFree = 'Supported'
     } else {
     tollFree = 'Not Supported'
+    
     }
+    console.log(regulatoryItems)
+    //post text to slack bolt
+    console.log(`Phone number availability for ${regulatoryItems['Locale name']} \n
+    *Alphanumeric*\n
+    ${alphaNetwork}\n
+    *Long Code *\n
+    ${longCode}\n
+    *International Long Code*\n
+    ${longCodeInternational}\n
+    *Short Code*\n
+    ${shortCode}\n
+    *Toll Free*\n
+    ${tollFree}\n
+    *Compliance Considerations*\n
+     ${regulatoryItems['Compliance considerations']}\n
+    _<${link}|Learn More>_
+    `)
