@@ -206,11 +206,10 @@ async function RegulationGet(url) {
     if ((regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
     (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
       tollFree = 'Supported'
-    } else {
-      tollFree = 'Not Supported'   
     }
+  } else {
+    tollFree = 'Not Supported'   
   }
-    //post text to slack bolt
     await say(`Phone number availability for ${regulatoryItems['Locale name']} \n
     *Alphanumeric*\n
     ${alphaNetwork}\n
