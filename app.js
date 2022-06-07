@@ -165,49 +165,50 @@ async function RegulationGet(url) {
     //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
     //trim included on all items due to html from web page sometimes having spaces before and after a given word
     if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 11){
-        regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,21)
-    }
-    if(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].length > 9){
+      regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,21)
+  }
+  if(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].length > 9){
       regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,21)
-    }
-    if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
-    (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
+  }
+  if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
+  (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
       alphaNetwork = 'Preregistration required'
-    } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported')
-     && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim() === ('Supported'))){
-       //todo I tihnk the issue might be here
+  } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported')
+  && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim() === ('Supported'))){
+      //todo I tihnk the issue might be here
       alphaNetwork = 'Available'
-    } else {
+  } else {
       alphaNetwork = 'Unavailable'
-    }
-    //categorize long code functionality
-    if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
-    (regulatoryItems['Long Code Domestic Twilio supported'].trim() === ("Supported"))){
+  }
+  //categorize long code functionality
+  if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
+  (regulatoryItems['Long Code Domestic Twilio supported'].trim() === ("Supported"))){
       longCode = 'Supported'
-    } else {
+  } else {
       longCode = 'Not Supported'
-    }
-    //categorize international long code functionality
-    if((regulatoryItems['Long Code International Operator network capability'].trim() === ('Supported') )&& 
-    (regulatoryItems['Long Code International Twilio supported'].trim() === ("Supported"))){
+  }
+  //categorize international long code functionality
+  if((regulatoryItems['Long Code International Operator network capability'].trim() === ('Supported') )&& 
+  (regulatoryItems['Long Code International Twilio supported'].trim() === ("Supported"))){
       longCodeInternational = 'Supported'
-    } else {
+  } else {
       longCodeInternational = 'Not Supported'
-    }
-    //categorize short code functionality
-    if((regulatoryItems['Short Code Operator network capability'].trim() === ('Supported') )&& 
-    (regulatoryItems['Short Code Twilio supported'].trim() === ("Supported"))){
+  }
+  //categorize short code functionality
+  if((regulatoryItems['Short Code Operator network capability'].trim() === ('Supported') )&& 
+  (regulatoryItems['Short Code Twilio supported'].trim() === ("Supported"))){
       shortCode = 'Supported'
-    } else {
+  } else {
       shortCode = 'Not Supported'
-    }
-    //categorize toll free functionality
-    if(case5 = true && (regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
-    (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
-    tollFree = 'Supported'
-    } else {
-    tollFree = 'Not Supported'
-    }
+  }
+  //categorize toll free functionality
+  if(case5 = true && (regulatoryItems['Toll Free Operator network capability'].trim() === ('Supported') )&& 
+  (regulatoryItems['Toll Free Twilio supported'].trim() === ("Supported"))){
+  tollFree = 'Supported'
+  } else {
+  tollFree = 'Not Supported'
+  
+  }
     //post text to slack bolt
     await say(`Phone number availability for ${regulatoryItems['Locale name']} \n
     *Alphanumeric*\n
