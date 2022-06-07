@@ -1,13 +1,9 @@
-//for slack auth
-import 'dotenv/config'
-//slack API library
-import App from '@slack/bolt';
+
 //using jsdom to scrape Twilio's regulatory page
 import { JSDOM } from "jsdom"
 //using fetch for restcountries api
 import fetch from 'node-fetch';
 
-//function to get regulatory page
 
 async function RegulationGet(url) {
     try{
@@ -28,19 +24,8 @@ async function RegulationGet(url) {
     console.log("made it", countryJson[0].cca2)
     return countryISORes
   }
-  
-  // Initializes your app with your bot token and signing secret
-  const app = new App.App({
-    token: process.env.SLACK_BOT_TOKEN,
-    socketMode: false,
-    signingSecret: process.env.SLACK_SIGNING_SECRET,
-    appToken: process.env.SLACK_APP_TOKEN
-  });
-  
-  // Listens to incoming messages that contain "hello"
-  app.message( async ({ message, say }) => {
-    // say() sends a message to the channel where the event was triggered
-    const countryFull = message.text
+
+    const countryFull = 'Albania'
     let countryISO = ''
     //initialize all fields that will be displayed in slack message
     let html
@@ -70,13 +55,11 @@ async function RegulationGet(url) {
       }catch(e){
         //catch error if country doesnt exist
         console.log('ERROR!!', e)
-         say("country not found")
-         return
+         //say("country not found")
       }
     }
     if (countryISO === "country not found"){
       //end action
-      return
     }
     //plug ISO into twilio regulatory link
     const link = `https://www.twilio.com/guidelines/${countryISO}/sms`
@@ -85,12 +68,10 @@ async function RegulationGet(url) {
     }catch(e){
       //catch 404 pages
       console.log("error on jsdom fetch", e)
-      say("country not found")
+      //say("country not found")
       html = "country not found"
-      return
     }
     if(html === "country not found"){
-      return
     }
     const dom = html.window.document
     //get array from specific table on twilio webpage
@@ -149,14 +130,21 @@ async function RegulationGet(url) {
             thArrText.length = index + 1
         }
     })
+
+    console.log("reg items!", regulatoryItems)
+    console.log("reg item alpha", regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim(/['"]+/g, ''))
     //categorize alphanumeric functionality
     //if statement needed to trim "supported" responses on Alphanumeric Dynamic Twilio supported due to extra spaces and '\n'
     //trim included on all items due to html from web page sometimes having spaces before and after a given word
-    if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 9){
+    if(regulatoryItems['Alphanumeric Dynamic Twilio supported'].length > 11){
+        console.log("check")
         regulatoryItems['Alphanumeric Dynamic Twilio supported'] = regulatoryItems['Alphanumeric Dynamic Twilio supported'].slice(11,20)
     }
+    
     if(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].length > 9){
-      regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,20)
+        regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,20)
+        console.log("before second slice", regulatoryItems['Alphanumeric Pre-registration Twilio supported'])
+        console.log("reg item alpha 2", (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim(/['"]+/g, '')).slice(0, 9))
     }
     if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
     (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim(/['"]+/g, '') === ("Required"))){
@@ -195,26 +183,3 @@ async function RegulationGet(url) {
     } else {
     tollFree = 'Not Supported'
     }
-    //post text to slack bolt
-    await say(`Phone number availability for ${regulatoryItems['Locale name']} \n
-    *Alphanumeric*\n
-    ${alphaNetwork}\n
-    *Long Code *\n
-    ${longCode}\n
-    *International Long Code*\n
-    ${longCodeInternational}\n
-    *Short Code*\n
-    ${shortCode}\n
-    *Toll Free*\n
-    ${tollFree}\n
-    *Compliance Considerations*\n
-     ${regulatoryItems['Compliance considerations']}\n
-    _<${link}|Learn More>_
-    `)
-  });
-//start slack app
-(async () => {
-  await app.start(process.env.PORT || 3000);
-
-  console.log('⚡️ Bolt app is running!');
-})();
