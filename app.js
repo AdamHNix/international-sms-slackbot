@@ -170,13 +170,12 @@ async function RegulationGet(url) {
   if(regulatoryItems['Alphanumeric Pre-registration Twilio supported'].length > 9){
       regulatoryItems['Alphanumeric Pre-registration Twilio supported'] = regulatoryItems['Alphanumeric Pre-registration Twilio supported'].slice(11,21)
   }
-  if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
-  (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
+  if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required') || 
+  regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Supported')) && 
+  (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required") ||
+  regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Supported"))){
       alphaNetwork = 'Supported - Pre-registration required'
-  }  else if (regulatoryItems['Alphanumeric Pre-registration Operator network capability'] === ('Supported')
-  && (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ('Supported'))){
-      alphaNetwork = 'Supported - Pre-registration Required'
-  }  else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported')
+  } else if ((regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported'))
   && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim() === ('Supported'))){
       alphaNetwork = 'Supported'
   }else {
