@@ -46,7 +46,7 @@ async function RegulationGet(url) {
     if(countryFull.toLowerCase() === 'dominica'){
       countryFull = 'dm'
     }
-    if(countryFull.toLowerCase() === 'deomcratic republic of congo' || countryFull.toLowerCase() === 'republic of congo'){
+    if(countryFull.toLowerCase() === 'democratic republic of congo' || countryFull.toLowerCase() === 'republic of congo'){
       countryFull = 'cd'
     }
     let countryISO = ''
