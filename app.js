@@ -172,15 +172,15 @@ async function RegulationGet(url) {
   }
   if((regulatoryItems['Alphanumeric Pre-registration Operator network capability'].trim() === ('Required')) && 
   (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ("Required"))){
-      alphaNetwork = 'Preregistration required'
+      alphaNetwork = 'Supported - Pre-registration required'
   } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported')
   && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim() === ('Supported'))){
-      alphaNetwork = 'Available'
+      alphaNetwork = 'Supported'
   } else if (regulatoryItems['Alphanumeric Pre-registration Operator network capability'] === ('Supported')
   && (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ('Supported'))){
       alphaNetwork = 'Available'
   } else {
-      alphaNetwork = 'Unavailable'
+      alphaNetwork = 'Supported'
   }
   //categorize long code functionality
   if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
