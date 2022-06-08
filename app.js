@@ -39,6 +39,9 @@ async function RegulationGet(url) {
   app.message( async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     const countryFull = message.text
+    if(toLowerCase(countryFull) === 'china'){
+      countryFull = 'cn'
+    }
     let countryISO = ''
     //initialize all fields that will be displayed in slack message
     let html
