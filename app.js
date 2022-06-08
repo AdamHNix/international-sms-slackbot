@@ -23,9 +23,7 @@ async function RegulationGet(url) {
   async function fetchCountry(request){
     const countryInfo = await fetch(`https://restcountries.com/v3.1/name/${request}`)
     const countryJson = await countryInfo.json()
-    console.log("json", countryJson)
     const countryISORes = countryJson[0].cca2
-    console.log("made it", countryJson[0].cca2)
     return countryISORes
   }
   
@@ -112,7 +110,6 @@ async function RegulationGet(url) {
               }
                 i++
             }
-            //rename keys where there are duplicates in the guidelines table.
             else if( th.textContent === '' || th.textContent === "Operator network capability"|| th.textContent === "Twilio supported"|| th.textContent === "Sender ID preserved"|| th.textContent === "Provisioning time"|| th.textContent === "UCS-2 support"|| th.textContent === "Use case restrictions"|| th.textContent === "Best practices"){
                 let y = 0
                 do{
@@ -137,7 +134,6 @@ async function RegulationGet(url) {
                         thArrText.push("Toll Free " + th.textContent)
                       }
                       break
-                      //todo THIS IS THE ISSUE. Adding toll free an an extra case caused problems
                   }
                       y ++
                   }while(y< 6)
