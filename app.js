@@ -175,7 +175,9 @@ async function RegulationGet(url) {
       alphaNetwork = 'Preregistration required'
   } else if (regulatoryItems['Alphanumeric Dynamic Operator network capability'] === ('Supported')
   && (regulatoryItems['Alphanumeric Dynamic Twilio supported'].trim() === ('Supported'))){
-      //todo I tihnk the issue might be here
+      alphaNetwork = 'Available'
+  } else if (regulatoryItems['Alphanumeric Pre-registration Operator network capability'] === ('Supported')
+  && (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ('Supported'))){
       alphaNetwork = 'Available'
   } else {
       alphaNetwork = 'Unavailable'
