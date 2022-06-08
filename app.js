@@ -221,8 +221,6 @@ async function RegulationGet(url) {
     ${shortCode}\n
     *Toll Free*\n
     ${tollFree}\n
-    *Compliance Considerations*\n
-     ${regulatoryItems['Compliance considerations']}\n
     _<${link}|Learn More>_
     `)
   });
