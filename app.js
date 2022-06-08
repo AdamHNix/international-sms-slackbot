@@ -178,9 +178,9 @@ async function RegulationGet(url) {
       alphaNetwork = 'Supported'
   } else if (regulatoryItems['Alphanumeric Pre-registration Operator network capability'] === ('Supported')
   && (regulatoryItems['Alphanumeric Pre-registration Twilio supported'].trim() === ('Supported'))){
-      alphaNetwork = 'Available'
-  } else {
       alphaNetwork = 'Supported'
+  } else {
+      alphaNetwork = 'Not Supported'
   }
   //categorize long code functionality
   if((regulatoryItems['Long Code Domestic Operator network capability'].trim() === ('Supported') )&& 
