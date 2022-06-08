@@ -38,7 +38,7 @@ async function RegulationGet(url) {
   // Listens to incoming messages that contain "hello"
   app.message( async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
-    const countryFull = message.text
+    let countryFull = message.text
     //fix for mix up on Macao and China via restcountries
     if(countryFull.toLowerCase() === 'china'){
       countryFull = 'cn'
