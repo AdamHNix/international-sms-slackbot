@@ -40,8 +40,14 @@ async function RegulationGet(url) {
     // say() sends a message to the channel where the event was triggered
     let countryFull = message.text
     //fix for mix up on Macao and China via restcountries
-    if(countryFull.toLowerCase() === 'china'){
+    if(countryFull.toLowerCase() === 'china' || countryFull.toLowerCase() === "people's republic of china" || countryFull.toLowerCase() === "peoples republic of china"){
       countryFull = 'cn'
+    }
+    if(countryFull.toLowerCase() === 'dominica'){
+      countryFull = 'dm'
+    }
+    if(countryFull.toLowerCase() === 'deomcratic republic of congo' || countryFull.toLowerCase() === 'republic of congo'){
+      countryFull = 'cd'
     }
     let countryISO = ''
     //initialize all fields that will be displayed in slack message
