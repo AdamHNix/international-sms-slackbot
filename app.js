@@ -60,7 +60,7 @@ async function RegulationGet(url) {
     } else{
       //convert to ISO
       try{
-        isoCheck = await fetchCountry(isoCheck)
+        isoCheck = fetchCountry(isoCheck)
         return isoCheck
       }catch(e){
         //catch error if country doesnt exist
@@ -85,7 +85,7 @@ async function RegulationGet(url) {
     // say() sends a message to the channel where the event was triggered
     let countryFull = message.text
     ///check for one-off use-cases where RESTcountries fails
-    countryFull = await countryChecker(countryFull)
+    countryFull = countryChecker(countryFull)
     console.log('countryFull after country checker', countryFull)
 
     let countryISO = ''
