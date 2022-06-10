@@ -86,6 +86,8 @@ async function RegulationGet(url) {
     let countryFull = message.text
     ///check for one-off use-cases where RESTcountries fails
     countryFull = await countryChecker(countryFull)
+    console.log('countryFull after country checker', countryFull)
+
     let countryISO = ''
     //initialize all fields that will be displayed in slack message
     let html
@@ -107,6 +109,7 @@ async function RegulationGet(url) {
     let objectArrayCount = 0
     //check for non-ISO responses and convert if necessary
     countryISO = await isoChecker(countryFull)
+    console.log("countryFull after isoChecker", countryFull)
     //end call if response is "country not fonud"
     if (countryISO === "country not found"){
       return
