@@ -61,6 +61,7 @@ async function RegulationGet(url) {
       //convert to ISO
       try{
         isoCheck = await fetchCountry(isoCheck)
+        return isoCheck
       }catch(e){
         //catch error if country doesnt exist
         console.log('ERROR!!', e)
