@@ -19,12 +19,56 @@ async function RegulationGet(url) {
       console.log("ERROR", e)
     }
   }
+
   //convert country to cca2 code
   async function fetchCountry(request){
     const countryInfo = await fetch(`https://restcountries.com/v3.1/name/${request}`)
     const countryJson = await countryInfo.json()
     const countryISORes = countryJson[0].cca2
     return countryISORes
+  }
+//test!
+  async function countryChecker(countryCheck){
+    if(countryCheck.toLowerCase() === 'china' || countryCheck.toLowerCase() === "people's republic of china" || countryCheck.toLowerCase() === "peoples republic of china"){
+      countryCheck = 'cn'
+    }
+    if(countryCheck.toLowerCase() === 'dominica'){
+      countryCheck = 'dm'
+    }
+    if(countryCheck.toLowerCase() === 'democratic republic of congo' || countryFull.toLowerCase() === 'republic of congo'){
+      countryCheck = 'cd'
+    }
+    if(countryCheck.toLowerCase() === 'india'){
+      countryCheck = 'in'
+    }
+    if(countryCheck.toLowerCase() === 'iran'){
+      countryCheck = 'ir'
+    }
+    if(countryCheck.toLowerCase() === 'mali'){
+      countryCheck = 'ml'
+    }
+    if(countryCheck.toLowerCase() === 'namibia'){
+      countryCheck = 'na'
+    }
+
+    return countryCheck
+  }
+
+  async function isoChecker(isoCheck){
+    if (isoCheck.length === 2){
+      return isoCheck
+    } else{
+      //convert to ISO
+      try{
+        isoCheck = await fetchCountry(isoCheck)
+      }catch(e){
+        //catch error if country doesnt exist
+        console.log('ERROR!!', e)
+        isoCheck = "country not found"
+        say("country not found")
+        return isoCheck
+      }
+    }
   }
   
   // Initializes your app with your bot token and signing secret
@@ -40,15 +84,7 @@ async function RegulationGet(url) {
     // say() sends a message to the channel where the event was triggered
     let countryFull = message.text
     //fix for mix up on Macao and China via restcountries
-    if(countryFull.toLowerCase() === 'china' || countryFull.toLowerCase() === "people's republic of china" || countryFull.toLowerCase() === "peoples republic of china"){
-      countryFull = 'cn'
-    }
-    if(countryFull.toLowerCase() === 'dominica'){
-      countryFull = 'dm'
-    }
-    if(countryFull.toLowerCase() === 'democratic republic of congo' || countryFull.toLowerCase() === 'republic of congo'){
-      countryFull = 'cd'
-    }
+    countryFull = await countryChecker(countryFull)
     let countryISO = ''
     //initialize all fields that will be displayed in slack message
     let html
@@ -58,17 +94,16 @@ async function RegulationGet(url) {
     let shortCode
     let tollFree
     let case5 = false
-    //initialize object array to hold final result
-    const regulatoryItems = {}
     //index counter for object array
     let i = 0
+    //initialize object array to hold final result
+    const regulatoryItems = {}
     //table values array initialized
     const tdArrText = []
     //table keys array initialized
     const thArrText = []
     //objectArrayCount keeps track of the indexes in the array below. thArr logs a lot of keys from the regulatory page that we don't need. No need to log anything after index 46
     let objectArrayCount = 0
-
 
     if (countryFull.length === 2){
       countryISO = countryFull
