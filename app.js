@@ -35,7 +35,7 @@ async function RegulationGet(url) {
     if(countryCheck.toLowerCase() === 'dominica'){
       countryCheck = 'dm'
     }
-    if(countryCheck.toLowerCase() === 'democratic republic of congo' || countryFull.toLowerCase() === 'republic of congo'){
+    if(countryCheck.toLowerCase() === 'democratic republic of congo' || countryCheck.toLowerCase() === 'republic of congo'){
       countryCheck = 'cd'
     }
     if(countryCheck.toLowerCase() === 'india'){
