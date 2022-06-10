@@ -28,7 +28,7 @@ async function RegulationGet(url) {
     return countryISORes
   }
 
-  async function countryChecker(countryCheck){
+  function countryChecker(countryCheck){
     if(countryCheck.toLowerCase() === 'china' || countryCheck.toLowerCase() === "people's republic of china" || countryCheck.toLowerCase() === "peoples republic of china"){
       countryCheck = 'cn'
     }
@@ -54,7 +54,7 @@ async function RegulationGet(url) {
     return countryCheck
   }
 
-  async function isoChecker(isoCheck){
+  function isoChecker(isoCheck){
     if (isoCheck.length === 2){
       return isoCheck
     } else{
