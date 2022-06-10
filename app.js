@@ -27,7 +27,7 @@ async function RegulationGet(url) {
     const countryISORes = countryJson[0].cca2
     return countryISORes
   }
-//test!
+
   async function countryChecker(countryCheck){
     if(countryCheck.toLowerCase() === 'china' || countryCheck.toLowerCase() === "people's republic of china" || countryCheck.toLowerCase() === "peoples republic of china"){
       countryCheck = 'cn'
@@ -83,7 +83,7 @@ async function RegulationGet(url) {
   app.message( async ({ message, say }) => {
     // say() sends a message to the channel where the event was triggered
     let countryFull = message.text
-    //fix for mix up on Macao and China via restcountries
+    ///check for one-off use-cases where RESTcountries fails
     countryFull = await countryChecker(countryFull)
     let countryISO = ''
     //initialize all fields that will be displayed in slack message
@@ -104,22 +104,10 @@ async function RegulationGet(url) {
     const thArrText = []
     //objectArrayCount keeps track of the indexes in the array below. thArr logs a lot of keys from the regulatory page that we don't need. No need to log anything after index 46
     let objectArrayCount = 0
-
-    if (countryFull.length === 2){
-      countryISO = countryFull
-    } else{
-      //convert to ISO
-      try{
-        countryISO = await fetchCountry(countryFull)
-      }catch(e){
-        //catch error if country doesnt exist
-        console.log('ERROR!!', e)
-         say("country not found")
-         return
-      }
-    }
+    //check for non-ISO responses and convert if necessary
+    countryISO = await isoChecker(countryFull)
+    //end call if response is "country not fonud"
     if (countryISO === "country not found"){
-      //end action
       return
     }
     //plug ISO into twilio regulatory link
