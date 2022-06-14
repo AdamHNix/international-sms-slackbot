@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "tsc --watch --preserveWatchOutput"
   },
   "author": "Adam Nix",
   "license": "ISC",
@@ -18,5 +19,8 @@
   },
   "engines": {
     "node": "v16.15.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.3"
   }
 }

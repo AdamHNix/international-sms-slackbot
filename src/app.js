@@ -66,7 +66,7 @@ async function RegulationGet(url) {
         //catch error if country doesnt exist
         console.log('ERROR!!', e)
         isoCheck = "country not found"
-        say("country not found")
+        say(isoCheck)
         return isoCheck
       }
     }
@@ -112,6 +112,7 @@ async function RegulationGet(url) {
     console.log("countryFull after isoChecker", countryFull)
     //end call if response is "country not fonud"
     if (countryISO === "country not found"){
+      say(countryISO)
       return
     }
     //plug ISO into twilio regulatory link
@@ -121,11 +122,11 @@ async function RegulationGet(url) {
     }catch(e){
       //catch 404 pages
       console.log("error on jsdom fetch", e)
-      say("country not found")
       html = "country not found"
       return
     }
     if(html === "country not found"){
+      say(html)
       return
     }
     const dom = html.window.document
