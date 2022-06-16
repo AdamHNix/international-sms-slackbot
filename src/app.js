@@ -1,3 +1,8 @@
+//todo
+//figure out what broke - seems git related or move to src
+//add number type considerations section
+//change alphanumeric pre-registered to include "preregistration supported"
+
 //for slack auth
 import 'dotenv/config'
 //slack API library
